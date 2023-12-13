@@ -6,16 +6,20 @@ namespace TodoApp.ViewModel
 {
     public partial class MainViewModel : ObservableObject
     {
+        public ObservableCollection<string> Items { get; set; }
+        //public ICommand AddCommand { get; }
+        public ICommand DeleteCommand { get; }
+        public ICommand TapCommand { get; }
+
         public MainViewModel() 
         {
             
             Items = new ObservableCollection<string>();
+            //AddCommand = new RelayCommand(Add);
+            DeleteCommand = new RelayCommand<string>(Delete);
+            TapCommand = new AsyncRelayCommand<string>(Tap);
 
         }
-
-        [ObservableProperty]
-        ObservableCollection<string> items;
-
         [ObservableProperty]
         string text;
 
@@ -30,7 +34,6 @@ namespace TodoApp.ViewModel
             Text = string.Empty;
         }
 
-        [RelayCommand]
         void Delete(string s) 
         {
             if (Items.Contains(s))
@@ -39,7 +42,6 @@ namespace TodoApp.ViewModel
             }
         }
 
-        [RelayCommand]
         async Task Tap(string s)
         {
             await Shell.Current.GoToAsync($"{ nameof(DetailPage)}?Text={s}");
